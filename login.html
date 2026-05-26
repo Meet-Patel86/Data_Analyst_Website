@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Login · DataStudio</title>
+<meta name="description" content="Sign in to use DataStudio."/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2306060e'/><rect x='6' y='18' width='4' height='8' rx='1' fill='%2300f5c4'/><rect x='14' y='12' width='4' height='14' rx='1' fill='%237b5ea7'/><rect x='22' y='6' width='4' height='20' rx='1' fill='%2300f5c4'/></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/auth.css"/>
+</head>
+<body>
+<div id="glow"></div>
+<main class="auth-shell">
+  <section class="auth-panel">
+    <div class="auth-brand"><span class="logo-dot"></span>DATA<span>STUDIO</span></div>
+    <p class="page-label">// Secure access</p>
+    <h1>Sign in to clean, analyze, and visualize data.</h1>
+    <p class="auth-copy">Use Google or Apple to continue. DataStudio records unique users and login activity in your backend so you can measure website usage.</p>
+
+    <div class="auth-actions">
+      <a class="auth-btn google" href="/auth/google"><span class="provider-mark">G</span><span>Continue with Google</span></a>
+      <a class="auth-btn apple" href="/auth/apple"><span class="provider-mark apple-mark"></span><span>Continue with Apple</span></a>
+    </div>
+
+    <div class="auth-status" id="configBox">Checking login setup...</div>
+  </section>
+
+  <section class="auth-preview" aria-hidden="true">
+    <div class="preview-header">
+      <span class="preview-dot"></span>
+      <span class="preview-title">USER ACCESS</span>
+      <span class="preview-pill">LIVE</span>
+    </div>
+    <div class="metric-row"><span>Unique users</span><strong id="metricUsers">--</strong></div>
+    <div class="metric-row"><span>Login required</span><strong>ON</strong></div>
+    <div class="mini-chart">
+      <span style="height:38%"></span><span style="height:62%"></span><span style="height:46%"></span><span style="height:78%"></span><span style="height:55%"></span><span style="height:88%"></span>
+    </div>
+    <div class="preview-note">Backend stores provider, email, first seen, last seen, and login count.</div>
+  </section>
+</main>
+<script src="assets/js/login.js"></script>
+</body>
+</html>

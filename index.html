@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DataStudio · Data Analyst Portfolio</title>
+<meta name="description" content="Professional data analytics tool — upload, clean, visualize and export your data."/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2306060e'/><rect x='6' y='18' width='4' height='8' rx='1' fill='%2300f5c4'/><rect x='14' y='12' width='4' height='14' rx='1' fill='%237b5ea7'/><rect x='22' y='6' width='4' height='20' rx='1' fill='%2300f5c4'/></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/styles.css"/>
+</head>
+<body>
+<div id="glow"></div>
+<nav>
+  <div class="logo"><span class="logo-dot"></span>DATA<span class="dim">STUDIO</span></div>
+  <div class="nav-tabs">
+    <button class="tab active" id="tab-upload" onclick="switchTab('upload')">📁 Upload<span class="tab-badge" id="badge-upload" style="display:none"></span></button>
+    <button class="tab" id="tab-insights" onclick="switchTab('insights')">🔍 Insights<span class="tab-badge" id="badge-insights" style="display:none"></span></button>
+    <button class="tab" id="tab-dashboard" onclick="switchTab('dashboard')">📊 Dashboard<span class="tab-badge" id="badge-dashboard" style="display:none"></span></button>
+    <button class="tab" id="tab-manual" onclick="switchTab('manual')">✏️ Builder</button>
+  </div>
+  <div class="nav-right">
+    <span class="nav-name" id="signedInUser">Data Analyst</span><a class="nav-contact" id="adminLink" href="/admin" style="display:none;text-decoration:none">Admin</a>
+    <button class="nav-contact" onclick="openContact()">✉ Hire Me</button><button class="nav-contact" onclick="logoutUser()">Logout</button>
+  </div>
+</nav>
+<div class="app">
+
+<!-- UPLOAD -->
+<div id="panel-upload" class="panel active">
+  <div class="page-header">
+    <p class="page-label">// Step 01 — Import</p>
+    <h1 class="page-title">Upload & Clean</h1>
+    <p class="page-sub">Drop a CSV or Excel file. Configure cleaning options, then preview results and download.</p>
+  </div>
+  <div class="onboard-grid" id="onboardGrid">
+    <div class="onboard-step"><div class="onboard-num">01 — UPLOAD</div><h4>Load your file</h4><p>CSV, .xlsx or .xls. Column types detected automatically.</p></div>
+    <div class="onboard-step"><div class="onboard-num">02 — CONFIGURE</div><h4>Choose cleaning steps</h4><p>Toggle which operations to apply before processing.</p></div>
+    <div class="onboard-step"><div class="onboard-num">03 — EXPLORE</div><h4>Insights tab</h4><p>Column profiles, fill rates and quality scores.</p></div>
+    <div class="onboard-step"><div class="onboard-num">04 — VISUALISE</div><h4>Dashboard + Builder</h4><p>Auto charts and a free-form builder with full axis control.</p></div>
+  </div>
+  <div class="upload-zone" id="dropZone"
+    onclick="document.getElementById('fileInput').click()"
+    ondragover="event.preventDefault();this.classList.add('drag')"
+    ondragleave="this.classList.remove('drag')"
+    ondrop="handleDrop(event)">
+    <span class="upload-icon">📂</span>
+    <h3>Drop your file here or click to browse</h3>
+    <p>Supports .csv · .xlsx · .xls — up to ~10 MB</p>
+    <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" onchange="handleFile(this.files[0])">
+  </div>
+  <div class="privacy-notice"><span>🔒</span>All processing happens entirely in your browser. No data is uploaded, stored, or transmitted to any server.</div>
+  <div class="sample-hint">No file handy? <button onclick="loadSampleData()">Try with sample data →</button></div>
+  <div id="fileInfoArea" style="display:none;margin-top:.8rem">
+    <div class="file-info">
+      <span class="file-icon" id="fileIconEl">📄</span>
+      <div class="file-meta">
+        <strong id="fileNameEl">—</strong>
+        <span id="fileMetaEl">0 rows · 0 columns</span>
+      </div>
+      <div class="file-actions">
+        <button class="btn btn-primary" id="cleanBtn" onclick="runCleaning()">✨ Clean Data</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('fileInput').click()">↺ Replace</button>
+      </div>
+    </div>
+    <div class="err-report-bar" id="errReportBar" style="display:none">
+      <div class="err-report-info"><strong>⚠ Errors detected in raw file</strong><span id="errReportLabel">Checking…</span></div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn-danger" onclick="showErrorPreview()">👁 View Errors</button>
+        <button class="btn-danger" onclick="downloadRawWithErrorSheet()">⬇ Download Error Report</button>
+      </div>
+    </div>
+    <div id="errorPreviewSection" style="display:none;margin-top:1rem">
+      <div class="section-title" style="margin-top:0">Raw file — errors highlighted · original values unchanged</div>
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.7rem;align-items:center">
+        <span style="font-size:11px;color:var(--muted);font-weight:300">Legend:</span>
+        <span class="err-legend err-missing">Missing value</span>
+        <span class="err-legend err-duplicate">Duplicate row</span>
+        <span class="err-legend err-whitespace">Whitespace</span>
+        <span class="err-legend err-typemismatch">Type mismatch</span>
+        <button class="btn btn-ghost" style="margin-left:auto;font-size:9px" onclick="document.getElementById('errorPreviewSection').style.display='none'">✕ Close</button>
+      </div>
+      <div class="table-wrap" id="errorPreviewTable"></div>
+      <p style="font-size:10px;color:var(--muted);margin-top:.5rem;font-weight:300">Showing up to 200 rows. Cell values are the original, unmodified values from your file.</p>
+    </div>
+    <div class="clean-controls">
+      <div class="clean-controls-header" onclick="toggleCleanControls()">
+        <span class="clean-controls-title">⚙ Cleaning options</span>
+        <span class="clean-controls-toggle" id="ctoggle">▾ collapse</span>
+      </div>
+      <div id="cleanOptsBody">
+        <div class="clean-grid">
+          <div class="clean-opt on" id="opt-dupes" onclick="toggleOpt('dupes')"><div class="clean-opt-check">✓</div><div class="clean-opt-text"><strong>Remove duplicates</strong><span>Drop exact duplicate rows</span></div></div>
+          <div class="clean-opt on" id="opt-missing" onclick="toggleOpt('missing')"><div class="clean-opt-check">✓</div><div class="clean-opt-text"><strong>Fill missing values</strong><span>Median for numbers, "Unknown" for text</span></div></div>
+          <div class="clean-opt on" id="opt-whitespace" onclick="toggleOpt('whitespace')"><div class="clean-opt-check">✓</div><div class="clean-opt-text"><strong>Trim whitespace</strong><span>Strip leading / trailing spaces</span></div></div>
+          <div class="clean-opt on" id="opt-types" onclick="toggleOpt('types')"><div class="clean-opt-check">✓</div><div class="clean-opt-text"><strong>Detect types</strong><span>Tag numeric, date and text columns</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="progressArea" style="display:none;margin-top:10px">
+      <div class="progress-label" id="progressLabel">Analyzing…</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div id="cleaningResults" style="display:none;margin-top:1.8rem">
+    <div class="undo-bar" id="undoBar" style="display:none">
+      <span id="undoMsg">Previous dataset saved.</span>
+      <button class="btn btn-ghost" onclick="undoClean()" style="color:#f59e0b;border-color:rgba(245,158,11,.3)">↩ Undo</button>
+    </div>
+    <div class="section-title">Cleaning summary</div>
+    <div class="stat-grid" id="cleanStats"></div>
+    <div class="section-title">Cleaning log</div>
+    <div class="cleaning-log" id="cleaningLog"></div>
+    <div class="download-bar">
+      <div class="download-info"><strong>Cleaned dataset ready</strong><span id="cleanedFileLabel">0 rows</span></div>
+      <div class="download-btns">
+        <button class="btn btn-success" onclick="downloadCleaned('csv')">⬇ CSV</button>
+        <button class="btn btn-success" onclick="downloadCleaned('xlsx')">⬇ XLSX</button>
+      </div>
+    </div>
+    <div class="section-title">Preview — click any row to drill in · click headers to sort</div>
+    <div id="filterBar" class="filter-bar"></div>
+    <div class="table-wrap" id="previewTable"></div>
+    <div id="drillPanel"></div>
+  </div>
+</div>
+
+<!-- INSIGHTS -->
+<div id="panel-insights" class="panel">
+  <div class="page-header">
+    <p class="page-label">// Step 02 — Explore</p>
+    <h1 class="page-title">Insights</h1>
+    <p class="page-sub">Column profiles, fill rates and quality scores. Click a column card to filter or chart it.</p>
+  </div>
+  <div id="insightsEmpty" class="empty">
+    <div class="empty-icon">🔍</div>
+    <h3>No data loaded yet</h3>
+    <p>Upload and clean a file first to see column-level insights</p>
+    <button class="btn btn-outline" onclick="switchTab('upload')" style="margin-top:.5rem">Go to Upload →</button>
+  </div>
+  <div id="insightsContent" style="display:none">
+    <div class="stat-grid" id="insightStats"></div>
+    <div class="section-title">Column profiles</div>
+    <div class="col-profile" id="colProfiles"></div>
+    <div class="section-title">Data quality overview</div>
+    <div class="table-wrap" id="qualityTable"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="panel-dashboard" class="panel">
+  <div class="page-header">
+    <p class="page-label">// Step 03 — Visualise</p>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-sub">Auto-generated charts. Click bars or slices to drill into that segment. Export any chart as PNG.</p>
+  </div>
+  <div id="dashEmpty" class="empty">
+    <div class="empty-icon">📊</div>
+    <h3>No data loaded yet</h3>
+    <p>Upload and clean a file first to generate your dashboard</p>
+    <button class="btn btn-outline" onclick="switchTab('upload')" style="margin-top:.5rem">Go to Upload →</button>
+  </div>
+  <div id="dashThinking" style="display:none" class="ai-thinking">
+    <div class="spinner"></div><span id="dashThinkingText">Analyzing data structure…</span>
+  </div>
+  <div id="dashContent" style="display:none"></div>
+</div>
+
+<!-- BUILDER -->
+<div id="panel-manual" class="panel">
+  <div class="page-header">
+    <p class="page-label">// Build — Your way</p>
+    <h1 class="page-title">Chart Builder</h1>
+    <p class="page-sub">Pick any columns from your cleaned file or type your own data. We suggest the best chart — you keep full control.</p>
+  </div>
+  <div class="cb-source-bar">
+    <button class="cb-src-btn active" id="srcBtnFile" onclick="cbSetSource('file')">
+      <span class="cb-src-icon">📂</span>
+      <span class="cb-src-label">From cleaned file</span>
+      <span class="cb-src-sub" id="srcFileSub">No file loaded</span>
+    </button>
+    <button class="cb-src-btn" id="srcBtnManual" onclick="cbSetSource('manual')">
+      <span class="cb-src-icon">✏️</span>
+      <span class="cb-src-label">Type manually</span>
+      <span class="cb-src-sub">Enter your own values</span>
+    </button>
+  </div>
+  <div class="cb-body">
+    <div>
+      <div id="cbFileSource">
+        <div class="cb-no-file" id="cbNoFile">
+          <div style="font-size:1.8rem;margin-bottom:.4rem;opacity:.4">📂</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">No cleaned file yet</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;font-weight:300">Upload and clean a file first.</div>
+        </div>
+        <div id="cbColPicker" style="display:none">
+          <div class="cb-section-label">Label column <span class="cb-hint">(x-axis / categories)</span></div>
+          <div class="cb-col-list" id="cbLabelCols"></div>
+          <div class="cb-section-label" style="margin-top:.9rem">Value column(s) <span class="cb-hint">(numeric · pick one or more)</span></div>
+          <div class="cb-col-list" id="cbValueCols"></div>
+          <div class="cb-filter-row">
+            <select class="cb-select" id="cbRowLimit">
+              <option value="all">All rows</option>
+              <option value="10">First 10</option>
+              <option value="20">First 20</option>
+              <option value="50">First 50</option>
+              <option value="100">First 100</option>
+            </select>
+            <select class="cb-select" id="cbSortBy">
+              <option value="none">No sort</option>
+              <option value="asc">Sort ↑ value</option>
+              <option value="desc">Sort ↓ value</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="cbManualSource" style="display:none">
+        <div style="display:flex;gap:5px;margin-bottom:.7rem;flex-wrap:wrap">
+          <button class="btn btn-outline" style="padding:5px 11px;font-size:9px" onclick="meAddColumn()">+ Col</button>
+          <button class="btn btn-outline" style="padding:5px 11px;font-size:9px" onclick="meAddRow()">+ Row</button>
+          <button class="btn btn-outline" style="padding:5px 11px;font-size:9px;color:var(--acc3);border-color:rgba(255,107,107,.3)" onclick="meClear()">Clear</button>
+        </div>
+        <div class="me-table-wrap" id="meTableWrap"></div>
+      </div>
+      <div style="margin-top:1rem">
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="cbBuild()">⚡ Build Chart</button>
+      </div>
+    </div>
+    <div>
+      <div class="cb-suggestion" id="cbSuggestion" style="display:none">
+        <div class="cb-sug-icon" id="cbSugIcon">◈</div>
+        <div><div class="cb-sug-title" id="cbSugTitle">—</div><div class="cb-sug-reason" id="cbSugReason"></div></div>
+      </div>
+      <div id="cbChartTypePicker" style="display:none">
+        <div class="cb-section-label" style="margin-bottom:.5rem">Chart type</div>
+        <div class="cb-type-grid" id="cbTypeGrid"></div>
+      </div>
+      <div class="me-card" id="cbChartCard" style="display:none;margin-top:.8rem">
+        <div class="me-card-header">
+          <span class="me-card-title" id="cbChartTitle">Preview</span>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="me-card-sub" id="cbChartSub"></span>
+            <button class="export-btn" onclick="exportChart('cbChart','builder-chart')">⬇ PNG</button>
+          </div>
+        </div>
+        <div style="position:relative;height:280px"><canvas id="cbChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<footer class="site-footer">
+  <div class="footer-brand"><strong>DATASTUDIO</strong>Built by a Data Analyst · All processing is 100% browser-based</div>
+  <div class="footer-links">
+    <a href="mailto:hello@example.com">✉ Email</a>
+    <a href="https://linkedin.com" target="_blank">in LinkedIn</a>
+    <a href="https://github.com" target="_blank">⌥ GitHub</a>
+    <a onclick="openContact()">💼 Hire Me</a>
+  </div>
+</footer>
+<div class="modal-backdrop" id="contactModal" style="display:none" onclick="if(event.target===this)closeContact()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeContact()">✕</button>
+    <div class="modal-title">Let's work together</div>
+    <div class="modal-sub">Have a data project? I'd love to help you turn raw data into clear business insights.</div>
+    <div class="modal-field"><label class="modal-label">Your name</label><input class="modal-input" type="text" placeholder="Jane Smith" id="cName"/></div>
+    <div class="modal-field"><label class="modal-label">Email address</label><input class="modal-input" type="email" placeholder="jane@company.com" id="cEmail"/></div>
+    <div class="modal-field"><label class="modal-label">Tell me about your project</label><textarea class="modal-input" placeholder="E.g. We have monthly sales data in Excel and need a dashboard…" id="cMsg"></textarea></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:.3rem" onclick="submitContact()">Send Message →</button>
+    <div class="modal-links">
+      <a class="modal-link" href="mailto:hello@example.com">✉ hello@example.com</a>
+      <a class="modal-link" href="https://linkedin.com" target="_blank">in LinkedIn</a>
+      <a class="modal-link" href="https://github.com" target="_blank">⌥ GitHub</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
+
+
+

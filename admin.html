@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin · DataStudio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2306060e'/><rect x='6' y='18' width='4' height='8' rx='1' fill='%2300f5c4'/><rect x='14' y='12' width='4' height='14' rx='1' fill='%237b5ea7'/><rect x='22' y='6' width='4' height='20' rx='1' fill='%2300f5c4'/></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/admin.css"/>
+</head>
+<body>
+<div id="glow"></div>
+<nav>
+  <a class="logo" href="/"><span class="logo-dot"></span>DATA<span>STUDIO</span></a>
+  <div class="nav-actions"><a href="/">Workspace</a><button onclick="logoutAdmin()">Logout</button></div>
+</nav>
+<main class="admin-shell">
+  <header class="page-header">
+    <p class="page-label">// Admin overview</p>
+    <h1>Usage dashboard</h1>
+    <p>Track users, logins, cleaned datasets, contacts, and backend storage health.</p>
+  </header>
+
+  <section class="stat-grid" id="statsGrid"></section>
+
+  <section class="admin-grid">
+    <div class="panel wide">
+      <div class="panel-head"><h2>Latest users</h2><span id="storageMode">--</span></div>
+      <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Provider</th><th>Logins</th><th>Last seen</th></tr></thead><tbody id="usersTable"></tbody></table></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Recent contacts</h2></div>
+      <div id="contactsList" class="list"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Recent datasets</h2></div>
+      <div id="datasetsList" class="list"></div>
+    </div>
+  </section>
+
+  <section class="panel export-panel">
+    <div><h2>Export backend data</h2><p>Download a JSON snapshot of users, contacts, datasets, and events.</p></div>
+    <button onclick="exportData()">Export JSON</button>
+  </section>
+</main>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>
