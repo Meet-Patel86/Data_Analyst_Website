@@ -1,0 +1,64 @@
+[
+  {
+    "id": "c7ab34b8-dc04-4f97-b483-b382e847b5cf",
+    "userId": "264d54a8-c873-4417-a35d-d04edd6ab82d",
+    "type": "app_visit",
+    "details": {},
+    "createdAt": "2026-05-25T10:26:57.796Z"
+  },
+  {
+    "id": "ca0e648d-0de4-4fff-8380-7569b96ab1ed",
+    "userId": "264d54a8-c873-4417-a35d-d04edd6ab82d",
+    "type": "login",
+    "details": {
+      "provider": "google"
+    },
+    "createdAt": "2026-05-25T10:26:57.787Z"
+  },
+  {
+    "id": "c986a36e-aed3-42a2-95d5-01e0c9444c1c",
+    "userId": "70e65d14-ab6d-487d-9047-98824671097e",
+    "type": "app_visit",
+    "details": {},
+    "createdAt": "2026-05-25T10:26:50.708Z"
+  },
+  {
+    "id": "41063434-54a1-473e-a470-de4389e5ef86",
+    "userId": "207a073e-5f9c-460b-9891-901c27335c2e",
+    "type": "app_visit",
+    "details": {},
+    "createdAt": "2026-05-25T08:58:16.254Z"
+  },
+  {
+    "id": "7ad23587-7e06-474c-9c25-087139733e2a",
+    "userId": "207a073e-5f9c-460b-9891-901c27335c2e",
+    "type": "login",
+    "details": {
+      "provider": "google"
+    },
+    "createdAt": "2026-05-25T08:58:16.245Z"
+  },
+  {
+    "id": "64dd3596-24de-4109-8415-15b915f9c6fc",
+    "userId": "264d54a8-c873-4417-a35d-d04edd6ab82d",
+    "type": "app_visit",
+    "details": {},
+    "createdAt": "2026-05-25T08:57:34.575Z"
+  },
+  {
+    "id": "62f5c376-1048-47e9-8b19-ecd59f9a8722",
+    "userId": "264d54a8-c873-4417-a35d-d04edd6ab82d",
+    "type": "login",
+    "details": {
+      "provider": "google"
+    },
+    "createdAt": "2026-05-25T08:57:34.570Z"
+  },
+  {
+    "id": "dea3d6a7-d821-44f0-a600-72d4a1f4a30b",
+    "userId": "264d54a8-c873-4417-a35d-d04edd6ab82d",
+    "type": "app_visit",
+    "details": {},
+    "createdAt": "2026-05-25T08:57:12.575Z"
+  }
+]

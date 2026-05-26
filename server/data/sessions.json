@@ -1,0 +1,20 @@
+[
+  {
+    "id": "f6da7d76-c59c-4a1e-a85f-59ecc0b9fb74",
+    "userId": "264d54a8-c873-4417-a35d-d04edd6ab82d",
+    "createdAt": "2026-05-25T10:26:57.789Z",
+    "expiresAt": "2026-06-24T10:26:57.789Z"
+  },
+  {
+    "id": "aeca4ef2-17a8-42b7-ac82-c62c4cc4733a",
+    "userId": "207a073e-5f9c-460b-9891-901c27335c2e",
+    "createdAt": "2026-05-25T08:58:16.247Z",
+    "expiresAt": "2026-06-24T08:58:16.247Z"
+  },
+  {
+    "id": "363ec9aa-6e98-4b61-8a0b-0f8f3dcc082e",
+    "userId": "264d54a8-c873-4417-a35d-d04edd6ab82d",
+    "createdAt": "2026-05-25T08:57:34.571Z",
+    "expiresAt": "2026-06-24T08:57:34.571Z"
+  }
+]
